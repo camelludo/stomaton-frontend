@@ -7,8 +7,8 @@ import { LanguageProvider } from "@/providers/language-provider"
 import { Toaster as SonnerToaster } from "sonner"
 
 export const metadata: Metadata = {
-  title: "LangConnect Client",
-  description: "LangConnect Client",
+  title: "STOMATON - Stone Content Intelligence",
+  description: "Professional stone profile generation and content management platform",
 }
 
 export default function RootLayout({
