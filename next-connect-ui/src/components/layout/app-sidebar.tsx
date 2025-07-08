@@ -6,8 +6,9 @@ import {
   Search,
   Home,
   Database,
-  Code,
-  Globe,
+  Sparkles,
+  AlertTriangle,
+  LogOut,
 } from "lucide-react"
 import {
   Sidebar,
@@ -18,54 +19,39 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import Link from "next/link"
-import { useTranslation } from "@/hooks/use-translation"
-import { useLanguage } from "@/providers/language-provider"
+import { clearAuthToken } from "@/lib/api-client"
+import { useRouter } from "next/navigation"
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const { t } = useTranslation()
-  const { language, setLanguage } = useLanguage()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    clearAuthToken()
+    router.push('/login')
+  }
 
   const mainItems = [
     {
-      name: t("sidebar.main"),
+      name: "Content Generation",
       href: "/",
-      icon: Home,
+      icon: Sparkles,
       isActive: pathname === "/",
     },
     {
-      name: t("sidebar.collections"),
-      href: "/collections",
+      name: "RAG Management",
+      href: "/rag-management",
       icon: Database,
-      isActive: pathname.startsWith("/collections"),
+      isActive: pathname.startsWith("/rag-management"),
     },
     {
-      name: t("sidebar.documents"),
-      href: "/documents",
-      icon: FileText,
-      isActive: pathname.startsWith("/documents"),
-    },
-    {
-      name: t("sidebar.search"),
-      href: "/search",
-      icon: Search,
-      isActive: pathname.startsWith("/search"),
-    },
-    {
-      name: t("sidebar.apiTester"),
-      href: "/api-tester",
-      icon: Code,
-      isActive: pathname.startsWith("/api-tester"),
+      name: "Knowledge Gaps",
+      href: "/knowledge-gaps",
+      icon: AlertTriangle,
+      isActive: pathname.startsWith("/knowledge-gaps"),
     },
   ]
 
@@ -77,9 +63,10 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <Link href="/">
-                  <div className="text-md">🔗</div>
+                  <div className="text-md">💎</div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium text-lg">LangConnect</span>
+                    <span className="truncate font-medium text-lg">STOMATON</span>
+                    <span className="truncate text-xs text-muted-foreground">Stone Intelligence</span>
                   </div>
                 </Link>
               </SidebarMenuButton>
@@ -87,25 +74,15 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain title={t("sidebar.mainTitle")} items={mainItems} />
+          <NavMain title="Main Navigation" items={mainItems} />
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <div className="px-3 py-2">
-                <Select value={language} onValueChange={(value: 'en' | 'ko') => setLanguage(value)}>
-                  <SelectTrigger className="w-full h-9">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      <SelectValue />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">{t("language.english")}</SelectItem>
-                    <SelectItem value="ko">{t("language.korean")}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <SidebarMenuButton onClick={handleLogout} className="w-full">
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
           <NavUser />
